@@ -1,11 +1,14 @@
 # import main Flask class and request object
 import os
+import time 
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from simulations.AH_dispersion.AH_dispersion import run_AH_dispersion
-from simulations.urban_wind.urban_wind import run_urban_wind
+from simulations.urban_wind.urban_wind import run_urban_wind, run_urban_wind_upload
 # from simulations.sky.sky import run_sky
 from simulations.air_pollutant.air_pollutant import run_air_pollutant, get_ap
+
+# from simulations.util.geojson_to_feature import geojson_to_feature
 import subprocess
 
 # create the Flask app
@@ -44,6 +47,7 @@ def uwind():
     # subprocess.run(["powershell", "pwd"], shell=True)
 
     result = run_urban_wind(bounds)
+    print('!!!!!!!!!', result)
     return result
 
 
@@ -89,10 +93,22 @@ def ah_up():
 def uwind_up():
     print('~~~~~~~~~~~~~')
     request_data = request.get_json()
-    print('request_data', request_data)
 
-    # bounds = request_data['bounds']
-    # print('........', str(bounds).replace(' ', ''))
+    session = str(time.time_ns())
+    # print('request_data', request_data)
+
+    sim_bound = request_data['simBoundary']
+    print('........ simBoundary', str(sim_bound).replace(' ', ''))
+
+    feat_bound = request_data['featureBoundary']
+    print('........ featureBoundary', str(feat_bound).replace(' ', ''))
+
+    data = request_data['data']
+    # print('........ data', str(data).replace(' ', ''))
+
+    # data_tif = geojson_to_feature(session, data, sim_bound, feat_bound)
+    # result = run_urban_wind_upload(session, data_tif, sim_bound)
+
     return {}
 
 
