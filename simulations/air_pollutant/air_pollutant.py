@@ -18,9 +18,8 @@ import os
 
 import rasterio
 
-CWD = os.getcwd()
 MAX_RASTER = 25
-RASTER_DIR = CWD + '/simulations/air_pollutant/ap_results'
+RASTER_DIR = os.path.join(os.path.dirname(__file__), "ap_results")
 RASTERS = {}
 for i in range(MAX_RASTER):
     RASTERS[i] = rasterio.open(RASTER_DIR + '/' + str(i + 1)  + '_V.tif', nodata=0)

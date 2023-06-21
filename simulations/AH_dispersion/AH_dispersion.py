@@ -21,9 +21,8 @@ from rasterio.mask import mask
 import shapely
 from pyproj import Transformer, CRS
 
-CWD = os.getcwd()
 
-RASTER_DEM = CWD + r'\simulations\AH_dispersion\result.tif'
+RASTER_DEM = os.path.join(os.path.dirname(__file__), "result.tif")
 # RASTER_DEM_DATA=arcpy.Raster(RASTER_DEM)
 RASTER = rasterio.open(RASTER_DEM)
 PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
