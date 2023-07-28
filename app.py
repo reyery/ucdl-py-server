@@ -5,7 +5,7 @@ from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from simulations.AH_dispersion.AH_dispersion import run_AH_dispersion
 from simulations.urban_wind.urban_wind import run_urban_wind, run_urban_wind_upload
-# from simulations.sky.sky import run_sky
+from simulations.sky.sky import run_sky
 from simulations.air_pollutant.air_pollutant import run_air_pollutant, get_ap
 
 # from simulations.util.geojson_to_feature import geojson_to_feature
@@ -51,18 +51,18 @@ def uwind():
     return result
 
 
-# @app.route('/sky', methods=['POST'])
-# def sky():
-#     print('~~~~~~~~~~~~~')
-#     # path = os.getcwd() + '\\AH_dispersion_result\\'
-#     request_data = request.get_json()
+@app.route('/sky', methods=['POST'])
+def sky():
+    print('~~~~~~~~~~~~~')
+    # path = os.getcwd() + '\\AH_dispersion_result\\'
+    request_data = request.get_json()
 
-#     bounds = request_data['bounds']
-#     print('........', str(bounds).replace(' ', ''))
-#     # subprocess.run(["powershell", "pwd"], shell=True)
+    bounds = request_data['bounds']
+    print('........', str(bounds).replace(' ', ''))
+    # subprocess.run(["powershell", "pwd"], shell=True)
 
-#     result = run_sky(bounds)
-#     return result
+    result = run_sky(bounds)
+    return result
 
 @app.route('/ap', methods=['POST'])
 def ap():

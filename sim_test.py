@@ -1,23 +1,25 @@
-from simulations.air_pollutant.air_pollutant import run_sim
+# from simulations.air_pollutant.air_pollutant import run_sim
+from simulations.sky.sky import run_sky
 
 arr = [
     [
-        103.84062679290356,
-        1.2769360175189917
+        103.8406,
+          1.2770
     ],
     [
-        103.840643954774,
-        1.2865787020560617
+        103.8407,
+          1.2770
     ],
     [
-        103.85123299117994,
-        1.2864071243710526
+        103.8407,
+          1.2771
     ],
     [
-        103.8511643436983,
-        1.27678159806878
+        103.8406,
+          1.2771
     ]
 ]
 
-run_sim(arr)
-
+# run_sim(arr)
+r = run_sky(arr)
+print(r)

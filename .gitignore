@@ -6,3 +6,4 @@ AH_dispersion_result
 air_pollutant_result
 air_pollutant_old
 simulations/air_pollutant/air_pollutant_old.py
+simulations/sky/svf_sg_extent_X.*
