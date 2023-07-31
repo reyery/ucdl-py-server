@@ -21,7 +21,7 @@ import shapely
 from pyproj import Transformer, CRS
 
 
-RASTER_DEM= os.path.join(os.path.dirname(__file__), "svf_sg_extent_X.tif")
+RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "svf_sg_extent_X.tif")
 RASTER = rasterio.open(RASTER_DEM)
 PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
 
