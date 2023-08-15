@@ -49,6 +49,13 @@ for i in range(16):
     WIND_DIR_VECS.append([x, y])
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
+
+# RASTER_DEM = "C:/Users/akibdpt/Downloads/Existing result/input/fine_scale_fad_FA.tif"
+# BUILDING_TIF = "C:/Users/akibdpt/Downloads/Existing result/input/building_height_for_fine_scale.tif"
+# RASTER = rasterio.open(RASTER_DEM, nodata=0)
+# BUILDING = rasterio.open(BUILDING_TIF, nodata=0)
+
+
 def run_wind(bounds, grid_size):
     data_list = []
     data_extent = None
@@ -74,10 +81,10 @@ def run_wind(bounds, grid_size):
             sim_mask_path[i] = PROJ_TRANSFORMER.transform(
                 sim_mask_path[i][0], sim_mask_path[i][1])
         fa_mask_path = [
-            [sim_mask_path[0][0] - 200, sim_mask_path[0][1] - 200],
-            [sim_mask_path[1][0] - 200, sim_mask_path[1][1] + 200],
-            [sim_mask_path[2][0] + 200, sim_mask_path[2][1] + 200],
-            [sim_mask_path[3][0] + 200, sim_mask_path[3][1] - 200]
+            [sim_mask_path[0][0] - (BUFFER_AREA_DIST + 1), sim_mask_path[0][1] - (BUFFER_AREA_DIST + 1)],
+            [sim_mask_path[1][0] - (BUFFER_AREA_DIST + 1), sim_mask_path[1][1] + (BUFFER_AREA_DIST + 1)],
+            [sim_mask_path[2][0] + (BUFFER_AREA_DIST + 1), sim_mask_path[2][1] + (BUFFER_AREA_DIST + 1)],
+            [sim_mask_path[3][0] + (BUFFER_AREA_DIST + 1), sim_mask_path[3][1] - (BUFFER_AREA_DIST + 1)]
         ]
 
         fa_mask_pgon = shapely.geometry.Polygon(fa_mask_path)
@@ -188,10 +195,10 @@ def run_wind_clip(bounds, grid_size):
             sim_mask_path[i] = PROJ_TRANSFORMER.transform(
                 sim_mask_path[i][0], sim_mask_path[i][1])
         fa_mask_path = [
-            [sim_mask_path[0][0] - 200, sim_mask_path[0][1] - 200],
-            [sim_mask_path[1][0] - 200, sim_mask_path[1][1] + 200],
-            [sim_mask_path[2][0] + 200, sim_mask_path[2][1] + 200],
-            [sim_mask_path[3][0] + 200, sim_mask_path[3][1] - 200]
+            [sim_mask_path[0][0] - (BUFFER_AREA_DIST + 1), sim_mask_path[0][1] - (BUFFER_AREA_DIST + 1)],
+            [sim_mask_path[1][0] - (BUFFER_AREA_DIST + 1), sim_mask_path[1][1] + (BUFFER_AREA_DIST + 1)],
+            [sim_mask_path[2][0] + (BUFFER_AREA_DIST + 1), sim_mask_path[2][1] + (BUFFER_AREA_DIST + 1)],
+            [sim_mask_path[3][0] + (BUFFER_AREA_DIST + 1), sim_mask_path[3][1] - (BUFFER_AREA_DIST + 1)]
         ]
         fa_mask_pgon = shapely.geometry.Polygon(fa_mask_path)
         sim_mask_pgon = shapely.geometry.Polygon(sim_mask_path)
@@ -231,10 +238,10 @@ def run_wind_clip(bounds, grid_size):
             math.ceil(len(sim_mask_result[0][0])/grid_size) * grid_size, 
             math.ceil(len(sim_mask_result[0])/grid_size) * grid_size
         )
-        data_extent = ' '.join([
-            str(min(ex0[0], ex1[0])), str(min(ex0[1], ex1[1])),
-            str(max(ex0[0], ex1[0])), str(max(ex0[1], ex1[1]))
-        ])
+        data_extent = [
+            min(ex0[0], ex1[0]), min(ex0[1], ex1[1]),
+            max(ex0[0], ex1[0]), max(ex0[1], ex1[1])
+        ]
 
         # for each of the simulation tile
         return {
