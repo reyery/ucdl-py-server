@@ -9,23 +9,22 @@
 # from arcpy import env
 # from arcpy.sa import *
 # from arcpy.ia import *
-import sys
-import json
-import gc
-import time 
 import os
+import math
+import numpy as np
 
 import rasterio
 from rasterio.mask import mask
 import shapely
 from pyproj import Transformer, CRS
+from ..util.aggregate import aggregate
 
 
-RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "svf_sg_extent_X.tif")
+RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "sky.tif")
 RASTER = rasterio.open(RASTER_DEM)
 PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
 
-def run_sky(bounds):
+def run_sky(bounds, grid_size):
     data_list=[]
     data_extent = None
     data_proj = str(RASTER.crs)
@@ -36,11 +35,20 @@ def run_sky(bounds):
             minmax[1] = min(minmax[1], coords[1])
             minmax[2] = max(minmax[2], coords[0])
             minmax[3] = max(minmax[3], coords[1])
+        
+        minmax[0], minmax[1] = PROJ_TRANSFORMER.transform(minmax[0], minmax[1])
+        minmax[2], minmax[3] = PROJ_TRANSFORMER.transform(minmax[2], minmax[3])
+
+        if grid_size > 1:
+            minmax[2] = math.ceil((minmax[2] - minmax[0]) / grid_size) * grid_size + minmax[0] - 1
+            minmax[3] = math.ceil((minmax[3] - minmax[1]) / grid_size) * grid_size + minmax[1] - 1
+
         mask_path = [[minmax[0], minmax[1]], [minmax[0], minmax[3]], [minmax[2], minmax[3]], [minmax[2], minmax[1]]]
-        # for i in range(len(mask_path)):
-        #     mask_path[i] = PROJ_TRANSFORMER.transform(mask_path[i][0], mask_path[i][1])
+
         mask_pgon = shapely.geometry.Polygon(mask_path)
+
         [mask_result, affine_transf] = mask(RASTER, [mask_pgon], all_touched = True, crop=True)
+
         data_list = mask_result[0].tolist()
         ex0 = affine_transf * (0,0)
         ex1 = affine_transf * (len(data_list[0]), len(data_list))
@@ -48,6 +56,8 @@ def run_sky(bounds):
             str(min(ex0[0], ex1[0])), str(min(ex0[1], ex1[1])), 
             str(max(ex0[0], ex1[0])), str(max(ex0[1], ex1[1]))
         ])
+        if grid_size > 1:
+            data_list = aggregate(data_list, grid_size, "mean")
     except Exception as ex:
         print('ERROR:', ex)
 

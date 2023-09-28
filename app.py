@@ -5,8 +5,10 @@ from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from simulations.AH_dispersion.AH_dispersion import run_AH_dispersion
 from simulations.urban_wind.urban_wind import run_urban_wind, run_urban_wind_upload
-from simulations.wind.wind import run_wind, run_wind_clip
+from simulations.wind.wind import run_wind
+from simulations.wind.wind_clip import run_wind_clip
 from simulations.sky.sky import run_sky
+from simulations.solar.solar import run_solar
 from simulations.air_pollutant.air_pollutant import run_air_pollutant, get_ap
 
 # from simulations.util.geojson_to_feature import geojson_to_feature
@@ -48,7 +50,21 @@ def uwind():
     # subprocess.run(["powershell", "pwd"], shell=True)
 
     result = run_urban_wind(bounds)
-    print('!!!!!!!!!', result)
+    return result
+
+@app.route('/solar', methods=['POST'])
+def solar():
+    print('~~~~~~~~~~~~~')
+    # path = os.getcwd() + '\\AH_dispersion_result\\'
+    request_data = request.get_json()
+
+    print('........', request_data)
+
+    bounds = request_data['bounds']
+    grid_size = request_data['grid_size']
+    # subprocess.run(["powershell", "pwd"], shell=True)
+
+    result = run_solar(bounds, grid_size)
     return result
 
 @app.route('/wind', methods=['POST'])
@@ -64,7 +80,6 @@ def wind():
     # subprocess.run(["powershell", "pwd"], shell=True)
 
     result = run_wind(bounds, grid_size)
-    print('!!!!!!!!!', result)
     return result
 
 @app.route('/wind_clip', methods=['POST'])
@@ -90,10 +105,11 @@ def sky():
     request_data = request.get_json()
 
     bounds = request_data['bounds']
+    grid_size = request_data['grid_size']
     print('........', str(bounds).replace(' ', ''))
     # subprocess.run(["powershell", "pwd"], shell=True)
 
-    result = run_sky(bounds)
+    result = run_sky(bounds, grid_size)
     return result
 
 @app.route('/ap', methods=['POST'])
