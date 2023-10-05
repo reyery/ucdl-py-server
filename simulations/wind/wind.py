@@ -21,9 +21,9 @@ from ..util.aggregate import aggregate
 from .wind_data import sg_wind_stn_data
 
 
-RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "wind.tif")
-RASTER = rasterio.open(RASTER_DEM)
-PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
+# RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "wind.tif")
+# RASTER = rasterio.open(RASTER_DEM)
+# PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
 
 def run_wind(bounds, grid_size):
     data_list=[]
