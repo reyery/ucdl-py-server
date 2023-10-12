@@ -20,9 +20,9 @@ from pyproj import Transformer, CRS
 from ..util.aggregate import aggregate
 
 
-# RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "solar.tif")
-# RASTER = rasterio.open(RASTER_DEM)
-# PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
+RASTER_DEM= os.path.join(os.path.dirname(__file__), "raster", "solar.tif")
+RASTER = rasterio.open(RASTER_DEM)
+PROJ_TRANSFORMER = Transformer.from_crs('EPSG:4326', 'EPSG:3414', always_xy=True)
 
 def run_solar(bounds, grid_size):
     data_list=[]
